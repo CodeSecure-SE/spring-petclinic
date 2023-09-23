@@ -1,0 +1,74 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java CI with Maven and CodeSonar SAST
+
+on:
+  push:
+    branches: [ release/** ]
+  pull_request:
+    branches: [ release/** ]
+
+jobs:
+  CodeSonar-build:
+    permissions: write-all
+    runs-on: self-hosted
+    container:
+      image: canuckmh/mvn-cso-builder:7.4p0
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    strategy:
+      matrix:
+        java: [ '17' ]
+    env:
+        GITHUB_CAFILE: ".github/github.cert.pem" 
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        GITHUB_API_URL: https://api.github.com
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        ROOT_TREE: "OSS-Projects/Spring-PetClinic-GitHub" 
+        PROJECT_NAME: "petclinic"
+        BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+        CSONAR_HUB_URL: "https://partnerdemo.codesonar.com" 
+        CSONAR_HUB_USER: "${{ secrets.CSONAR_HUB_USER }}"
+        CSONAR_HUB_PASSWORD: "${{ secrets.CSONAR_HUB_PASS }}"
+        CSONAR_CSHOME: /opt/codesonar
+        CSO_GITHUB: /opt/codesonar-github 
+        GITHUB_REPO_URL: "https://github.com/CodeSecure-SE/spring-petclinic"    # the github.repositoryUrl is not an http-link.
+        TARGET: ${{ github.base_ref }}
+        IS_PR: ${{ github.event_name }}
+        MAVEN_CONFIG: ""
+        M2_HOME: "/m2"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{matrix.java}}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{matrix.java}}
+          distribution: 'adopt'
+          cache: maven
+      - name: Build with Maven Wrapper
+        run: ./mvnw -B compile
+      - name: Get CodeSonar Integration
+        uses: actions/checkout@v4
+        with:
+          repository: CodeSecure-SE/codesonar_ci
+          ref: main
+          path: scripts     
+      - name: CodeSonar SAST
+        run: python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
+          -include-sources src/main/**/*.java 
+          -include-artifacts target/**/*.class
+      - name: Upload SARIF to GitHub #Use this if you do not have GitHub Enterprise
+        if: ${{ github.event.pull_request }}
+        uses: actions/upload-artifact@v3
+        with:
+            name: SARIF file
+            path: warnings.sarif
+      - name: Push Summary Report
+        if: ${{ github.event.pull_request }}
+        uses: thollander/actions-comment-pull-request@v2
+        with: 
+            filePath: warnings.md         
+          
