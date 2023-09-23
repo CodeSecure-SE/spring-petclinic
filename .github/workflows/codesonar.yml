@@ -59,4 +59,4 @@ jobs:
         run: python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
           -include-sources src/main/**/*.java 
           -include-artifacts target/**/*.class
-          -include-libraries src/main/**/*.jar
+          -include-libraries ~/.m2/repository/org/springframework/**/spring*.jar
