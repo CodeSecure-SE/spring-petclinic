@@ -11,7 +11,7 @@ on:
 
 jobs:
   CodeSonar-build:
-
+    permissions: write-all
     runs-on: self-hosted
     container:
       image: canuckmh/mvn-cso-builder:7.4p0
