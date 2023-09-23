@@ -48,4 +48,10 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build with Maven Wrapper
-        run: ./mvnw -B package
+        run: ./mvnw -B compile
+      - name: Get CodeSonar Integration
+        uses: actions/checkout@v4
+        with:
+          repository: CodeSecure-SE/codesonar_ci
+          ref: main
+          path: scripts     
