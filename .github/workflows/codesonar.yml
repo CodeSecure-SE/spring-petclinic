@@ -55,3 +55,5 @@ jobs:
           repository: CodeSecure-SE/codesonar_ci
           ref: main
           path: scripts     
+      - name: CodeSonar SAST
+        run: python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan -include-sources src/main/**/*.java -include-artifacts target/**/*.class
