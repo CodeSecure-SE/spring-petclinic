@@ -57,7 +57,7 @@ jobs:
           ref: main
           path: scripts     
       - name: CodeSonar SAST
-        run: pwd; ls -laR /__w/; python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
+        run: pwd; ls -laR /root/.m2; python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
           -include-sources src/main/**/*.java 
           -include-artifacts target/**/*.class
           -include-libraries /m2/repository/org/springframework/**/spring*.jar
