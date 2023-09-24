@@ -41,8 +41,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/owners/{ownerId}")
 class PetController {
 
-	
-
 	private final OwnerRepository owners;
 
 	public PetController(OwnerRepository owners) {

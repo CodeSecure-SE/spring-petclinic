@@ -44,8 +44,6 @@ import jakarta.validation.Valid;
 @Controller
 class OwnerController {
 
-	
-
 	private final OwnerRepository owners;
 
 	public OwnerController(OwnerRepository clinicService) {
