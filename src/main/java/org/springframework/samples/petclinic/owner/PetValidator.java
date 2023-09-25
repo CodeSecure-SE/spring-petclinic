@@ -31,6 +31,8 @@ import org.springframework.validation.Validator;
  */
 public class PetValidator implements Validator {
 
+	private static final String REQUIRED = "required";
+
 	@Override
 	public void validate(Object obj, Errors errors) {
 		Pet pet = (Pet) obj;
