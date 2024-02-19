@@ -22,10 +22,9 @@ jobs:
       matrix:
         java: [ '17' ]
     env:
-        GITHUB_CAFILE: ".github/github.cert.pem" 
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        GITHUB_API_URL: https://api.github.com
-        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        CAFILE: ".github/github.cert.pem" 
+        TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         ROOT_TREE: "OSS-Projects/Spring-PetClinic-GitHub" 
         PROJECT_NAME: "petclinic"
         BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
@@ -34,8 +33,10 @@ jobs:
         CSONAR_HUB_PASSWORD: "${{ secrets.CSONAR_HUB_PASS }}"
         CSONAR_CSHOME: /opt/codesonar
         CSO_GITHUB: /opt/codesonar-github 
-        GITHUB_REPO_URL: "https://github.com/CodeSecure-SE/spring-petclinic"    # the github.repositoryUrl is not an http-link.
+        CS_USER_HOME: /__w/petclinic/petclinic
+        REPO_URL: "https://github.com/CodeSecure-SE/spring-petclinic"    # the github.repositoryUrl is not an http-link.
         TARGET: ${{ github.base_ref }}
+        COMMIT_HASH: ${{ github.sha }}
         IS_PR: ${{ github.event_name }}
         MAVEN_CONFIG: ""
         M2_HOME: "/m2"
