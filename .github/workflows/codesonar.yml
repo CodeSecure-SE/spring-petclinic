@@ -14,10 +14,10 @@ jobs:
     permissions: write-all
     runs-on: self-hosted
     container:
-      image: canuckmh/mvn-cso-builder:7.4p0
+      image: ghcr.io/codesecure-se/mvn-csoj-builder:8.1b0
       credentials:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     strategy:
       matrix:
         java: [ '17' ]
@@ -62,7 +62,7 @@ jobs:
           -include-artifacts target/**/*.class
       - name: Upload SARIF to GitHub #Use this if you do not have GitHub Enterprise
         if: ${{ github.event.pull_request }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
             name: SARIF file
             path: warnings.sarif
