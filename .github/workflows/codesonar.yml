@@ -14,40 +14,41 @@ jobs:
     permissions: write-all
     runs-on: self-hosted
     container:
-      image: canuckmh/mvn-cso-builder:7.4p0
+      image: ghcr.io/codesecure-se/mvn-csoj-builder:8.1b0
       credentials:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     strategy:
       matrix:
         java: [ '17' ]
     env:
-        GITHUB_CAFILE: ".github/github.cert.pem" 
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        GITHUB_API_URL: https://api.github.com
-        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-        ROOT_TREE: "OSS-Projects/Spring-PetClinic-GitHub" 
+        CAFILE: ".github/github.cert.pem" 
+        TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        ROOT_TREE: "OSS-Projects/PetClinic-GitHub" 
         PROJECT_NAME: "petclinic"
         BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-        CSONAR_HUB_URL: "https://partnerdemo.codesonar.com" 
+        CSONAR_HUB_URL: "https://duck.dyndns.org:7340" 
         CSONAR_HUB_USER: "${{ secrets.CSONAR_HUB_USER }}"
         CSONAR_HUB_PASSWORD: "${{ secrets.CSONAR_HUB_PASS }}"
         CSONAR_CSHOME: /opt/codesonar
         CSO_GITHUB: /opt/codesonar-github 
-        GITHUB_REPO_URL: "https://github.com/CodeSecure-SE/spring-petclinic"    # the github.repositoryUrl is not an http-link.
+        CS_USER_HOME: /__w/spring-petclinic/spring-petclinic
+        REPO_URL: "https://github.com/CodeSecure-SE/spring-petclinic"    # the github.repositoryUrl is not an http-link.
         TARGET: ${{ github.base_ref }}
+        COMMIT_HASH: ${{ github.sha }}
         IS_PR: ${{ github.event_name }}
         MAVEN_CONFIG: ""
         M2_HOME: "/m2"
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK ${{matrix.java}}
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{matrix.java}}
-          distribution: 'adopt'
-          cache: maven
+      - uses: actions/checkout@v4
+#      - name: Set up JDK ${{matrix.java}}
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: ${{matrix.java}}
+#          distribution: 'adopt'
+#          cache: maven
       - name: Build with Maven Wrapper
         run: ./mvnw -B compile
       - name: Get CodeSonar Integration
@@ -62,7 +63,7 @@ jobs:
           -include-artifacts target/**/*.class
       - name: Upload SARIF to GitHub #Use this if you do not have GitHub Enterprise
         if: ${{ github.event.pull_request }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
             name: SARIF file
             path: warnings.sarif

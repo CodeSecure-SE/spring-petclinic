@@ -16,3 +16,6 @@ _site/
 *.css
 !petclinic.css
 t
+
+petclinic*/*
+petclinic.*
