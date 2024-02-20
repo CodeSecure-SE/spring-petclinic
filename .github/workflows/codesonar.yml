@@ -58,7 +58,7 @@ jobs:
           ref: main
           path: scripts     
       - name: CodeSonar SAST
-        run: pwd; python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
+        run: python3 scripts/build_and_analyze.py codesonar.conf cs-java-scan 
           -include-sources src/main/**/*.java 
           -include-artifacts target/**/*.class
       - name: Upload SARIF to GitHub #Use this if you do not have GitHub Enterprise
