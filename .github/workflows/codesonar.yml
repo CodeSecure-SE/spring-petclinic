@@ -25,10 +25,10 @@ jobs:
         CAFILE: ".github/github.cert.pem" 
         TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-        ROOT_TREE: "OSS-Projects/Spring-PetClinic-GitHub" 
+        ROOT_TREE: "OSS-Projects/PetClinic-GitHub" 
         PROJECT_NAME: "petclinic"
         BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-        CSONAR_HUB_URL: "https://partnerdemo.codesonar.com" 
+        CSONAR_HUB_URL: "https://duck.dyndns.org:7340" 
         CSONAR_HUB_USER: "${{ secrets.CSONAR_HUB_USER }}"
         CSONAR_HUB_PASSWORD: "${{ secrets.CSONAR_HUB_PASS }}"
         CSONAR_CSHOME: /opt/codesonar
