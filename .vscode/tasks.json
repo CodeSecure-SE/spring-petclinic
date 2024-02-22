@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "inputs": [
+    {
+    "id": "codesonarAnalysisName",
+    "type": "promptString",
+    "description": "CodeSonar analysis name",
+    "default": "Analysis-1234"
+    }
+    ],
+    "tasks": [
+    {
+    "type": "shell",
+    "label": "Java: CodeSonar analyze",
+    "command": [
+        "./mvnw -B compile ; codesonar analyze petclinic -hubuser ${config:codesonar.hubUser} -auth certificate -name ${input:codesonarAnalysisName} -conf-file codesonar.conf -project OSS-Projects/PetClinic-GitHub/developers/${config:codesonar.hubUser}  ${config:codesonar.hubAddress} cs-java-scan  -include-sources src/main/**/*.java -include-artifacts target/**/*.class"
+    ],
+    "group": "build",
+    "detail": "builder: make",
+    "presentation": {
+        "showReuseMessage": false,
+        "panel": "new"
+    }
+    }
+    ]
+}
